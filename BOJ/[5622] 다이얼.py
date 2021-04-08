@@ -1,0 +1,9 @@
+word = list(input())
+number = 0
+dial = {2:['A','B','C'],3:['D','E','F'],4:['G','H','I'],5:['J','K','L'],6:['M','N','O'],7:['P','Q','R','S'],8:['T','U','V'],9:['W','X','Y','Z']}
+for i in word:
+    for j in dial:
+        if i in dial[j]:
+            number+=(j + 1)
+
+print(number)
