@@ -168,7 +168,7 @@ parent = [0] * (v + 1) # 부모 테이블 초기화하기
 
 # 모든 간선을 담을 리스트와, 최종 비용을 담을 변수
 edges = []
-rersult = 0
+result = 0
 
 # 부모 테이블 상에서, 부모를 자기 자신으로 초기화
 for i in range(1, v + 1):
@@ -201,8 +201,6 @@ print(result)
 - 여러 가지 답이 존재할 수 있다.
 - 모든 원소를 방문하기 전에 큐가 빈다 => 사이클이 존재
 - 스택을 활용한 DFS로도 위상 정렬 수행 가능
-
-
 
 ```python
 from collections import deque
