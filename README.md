@@ -1,5 +1,7 @@
 # Daily_Algorithm
 
+[![solved.ac tier](http://mazassumnida.wtf/api/generate_badge?boj=lalua456)](https://solved.ac/lalua456)
+
 
 
 
