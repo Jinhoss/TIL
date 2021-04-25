@@ -354,3 +354,85 @@ for _ in range(m + k):
 - e : 숫자를 지수 형식으로 만들어 줍니다.
 - = : 숫자 형식에만 사용합니다. 부호를 항상 제일 앞에 출력합니다.
 
+
+
+<br/>
+
+
+
+
+
+#### Trie 알고리즘
+
+- 문자열을 검색하는 문제에서 입력되는 문자열이 많을 경우 사용
+- ex) 검색엔진 사이트에서 제공하는 자동 완성 및 검색어 추천기능에 활용
+- Trie 알고리즘은 노드를 이용한 Tree형태로 이루어져 있음
+- 문자열의 끝을 알리는 flag가 존재함
+
+```python
+# Node 구현
+class Node(object):
+    def __init__(self, key, data = None):
+        self.key = key
+        self.data = data
+        self.children = {}
+
+# Trie 구현
+class Trie:
+    def __init__(self):
+        # head를 빈 노드로 설정함
+        self.head = Node(none)
+    
+    # 트리를 생성하기 위한 함수
+   	def insert(self, string):
+        current_node = self.head
+        
+        # 입력된 문자열의 문자를 하나씩 children에 확인 후 저장
+        for char in string:
+            if char not in current_node.children:
+                current_node.children[char] = Node(char)
+            current_node = current_node.children[char]
+        # 문자열을 다 돌면 마지막 노드의 data에 문자열을 저장함
+        current_node.data = string
+    # 문자열이 존재하는지에 대한 여부를 리턴하는 함수
+    def search(self, string):
+        current_node = self.head
+        # 문자열을 하나씩 돌면서 확인 후 마지막 노드 data가 존재하면 True
+        for char in string:
+            if char in current_node.children:
+                current_node = current_node.children[char]
+            # children에 존재하지 않으면 False
+            else:
+                return False
+        if current_node.data:
+            return True
+        # 마지막 노드 data가 존재하지 않아도 False
+        else:
+            return False
+    # prefix단어로 시작하는 단어를 찾고 배열로 리턴하는 함수
+    def starts_with(self, prefix):
+        current_node = self.head
+        words = []
+        # prefix까지 순회
+        for p in prefix:
+            if p in current_node.children:
+                current_node = current_node.children[p]
+            else:
+                return None
+        # 그 다음부터는 data가 존재하는 것들만 배열에 저장하여 리턴
+        current_node = [current_node]
+        next_noede = []
+        while True:
+            for node in current_node:
+                if node.data:
+                    words.append(node.data)
+                next_node.extend(list(node.children.value()))
+            if len(next_node) != 0:
+                current_node = next_node
+                next_node = []
+            else:
+                break
+        return words
+                
+```
+
