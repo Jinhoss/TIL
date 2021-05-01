@@ -436,3 +436,27 @@ class Trie:
                 
 ```
 
+<br/>
+
+#### TSP 알고리즘
+
+pseudo code
+
+```
+ans = infinite
+
+find_path(start, last, V, tmp_dist):
+	if 모든 도시를 방문:
+		return_home_dist = D[last][start] or infinite
+		ans = min(ans, tmp_dist, + return_home_dist)
+		return
+	for left_city in V의 여집합:
+		if last와 left city가 연결:
+			left_city를 방문, V에 추가
+			find_path(start, left_city, V, tmp_dist, D[last][left_city])
+			V에서 left_city를 제거
+			
+	ans가 모든 경로의 최소값
+```
+
+모든 도시를 방문했지만 마지막 방문 도시에서 출발지로 돌아올 수 없다면 infinite를 반환하게 하여 정답 x로 처리한다.
