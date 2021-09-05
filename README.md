@@ -1,4 +1,4 @@
-# Daily_Algorithm
+# Algorithm
 
 [![solved.ac tier](http://mazassumnida.wtf/api/generate_badge?boj=lalua456)](https://solved.ac/lalua456)
 
@@ -6,7 +6,7 @@
 
 
 
-## 📅 매일 한 문제 이상 풀기
+## 📅 진행방법
 
 문제를 풀고 시간적 여유가 있을때 velog에 문제풀이 게시
 
