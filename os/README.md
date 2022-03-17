@@ -245,5 +245,19 @@ __HRN(Highest Response Ratio Next)__
 
 
 
+# 동기(Sync)와 비동기(Async)
+
+- 메소드를 실행시킴과 동시에 반환 값이 기대되는 경우 => 동기
+- 그렇지 않은 경우 => 비동기
+- 동시라는 말은 값이 반환되기 전까지 blocking되어 있다는 것을 의미, input 함수
+- 비동기는 blocking되지 않고 event queue에 넣거나 배그라운드 thread에게 해당 task를 위임하고 바로 다음 코드를 실행하기 때문에 바로 반환되지 않음
+
+__blocking__
 
 
+
+![block](README.assets/block.PNG)
+
+__non-blocking__
+
+![nonblock](README.assets/nonblock.PNG)
