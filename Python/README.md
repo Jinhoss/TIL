@@ -389,3 +389,110 @@ Foo(0).y = Foo(2)
 | `Foo(2)` | 1         | 0       | `c.x.y`   |
 
 이 상황에서 Foo(0)은 unreachable 리스트에 있다가 Foo(1)을 조사하며 다시 young 리스트의 맨 뒤로 돌아왔고, Foo(2)도 unreachable 리스트에 갔지만 곧 Foo(0)에 의해 참조될 수 있음을 알고 다시 young 리스트로 돌아온다.
+
+
+
+# Celery
+
+Celery는 메시지 패싱 방식의 분산 비동기 작업 큐다. 작업은 브로커를 통해 메시지로 워커에 전달되어 처리된다. 작업은 멀티프로세싱, eventlet, gevent를 사용해, 하나 혹은 그 이상의 워커에서 동시적으로 실행되며 백그라운드에서 비동기적으로 실행될 수 있다.
+
+
+
+# PyPy 가 CPython 보다 빠른 이유
+
+Cpython은 일반적인 인터프리터인데 반해 PyPy는 실행 추적 JIT(Just In Time) 컴파일을 제공하는 인터프리터기 때문이다. PyPy는 RPython으로 컴파일된 인터프리터인데, C로 작성된 RPython 툴체인으로 인터프리터 소스에 JIT 컴파일을 위한 힌트를 추가해 CPython 보다 빠른 실행 속도를 가질 수 있게 되었다.
+
+
+
+## PyPy
+
+PyPy는 파이썬으로 만들어진 파이썬 인터프리터. 일반적으로 파이썬 인터프리터를 다시 한 번 파이썬으로 구현한 것인데 CPython보다 빠르다.
+
+
+
+## 실행 추적 JIT 컴파일
+
+메서드 단위로 최적화하는 전통적인 JIT와 다르게 런타임에서 자주 실행되는 루프를 최적화한다.
+
+
+
+## RPython(Restricted Python)
+
+RPython은 이런 실행 추적 JIT 컴파일을 C로 구현해 툴체인을 포함한다. 그래서 RPython으로 인터프리터를 작성하고 툴체인으로 힌트를 추가하면 인터프리터에 실행추적 JIT 컴파일러를 빌드한다. PyPy 프로젝트 팀이 만든 일종의 인터프리터 제작 프레임워크이다. 동적 언어인 Python에서 표준 라이브러리와 문법에 제약을 가해 변수의 정적 컴파일이 가능하도록 RPython을 만들었으며, 동적 언어 인터프리터를 구현하는데 사용된다.
+
+이렇게 언어 사양과 구현을 분리함으로써 어떤 동적 언어에 대해서라도 자동으로 JIT(Just-in-Time) 컴파일러를 생성할 수 있게 되었다.
+
+
+
+# 메모리 누수가 발생할 수 있는 경우
+
+사용자의 부주의로 인해 발생하는 메모리 누수에 대해서만 취급
+
+대표적으로 mutable 객체를 기본 인자값으로 사용하는 경우에 메모리 누수가 일어난다.
+
+ex)
+
+```python
+def foo(a=[]):
+    a.append(time.time())
+    return a
+```
+
+위의 경우 foo()를 호출할 때마다 기본 인자값인 a에 타임스탬프 값이 추가된다. 이는 의도하지 않은 결과를 초래하므로 보통의 경우 a=None으로 두고 함수 내부에서 if a is None 구문으로 빈 리스트를 할당해준다.
+
+
+
+다른 경우로 웹 애플리케이션에서 timeout이 없는 캐시 데이터를 생각해볼 수 있다. 요청이 들어올수록 캐시 데이터는 쌓여가는데 이를 해제할 루틴을 따로 만들어두지 않는다면 이도 메모리 누수를 초래한다. 
+
+클래스 내 `__del__` 메서드를 재정의하는 행위도 메모리 누수를 일으킨다. 순환 참조 중 인 클래스가 `__del__` 메서드를 재정의하고 있다면 가비지 컬렉터로 해제되지 않는다.
+
+
+
+# Duck Typing
+
+덕 타이핑이란 동적 타입을 가지는 프로그래밍 언어에서 많이 사용되는 개념으로, 객체의 실제 타입보다는 객체의 변수와 메서드가 그 객체의 적합성을 결정하는 것을 의미한다. 파이썬은 메서드 호출이나 변수 접근시 타입 검사를 하지 않으므로 duck typing을 다양하게 활용할 수 있다.
+
+ex)
+
+```python
+class Duck:
+    def walk(self):
+        print('뒤뚱뒤뚱')
+
+    def quack(self):
+        print('Quack!')
+
+class Mallard:  # 청둥오리
+    def walk(self):
+        print('뒤뚱뒤뒤뚱뒤뚱')
+
+    def quack(self):
+        print('Quaaack!')
+
+class Dog:
+    def run(self):
+        print('타다다다')
+
+    def bark(self):
+        print('왈왈')
+
+
+def walk_and_quack(animal):
+    animal.walk()
+    animal.quack()
+
+
+walk_and_quack(Duck())  # prints '뒤뚱뒤뚱', prints 'Quack!'
+walk_and_quack(Mallard())  # prints '뒤뚱뒤뒤뚱뒤뚱', prints 'Quaaack!'
+walk_and_quack(Dog())  # AttributeError : 'Dog' object has no attribute 'walk'
+```
+
+
+
+위 예시에서 Duck 과 Mallard는 둘 다 walk() quack()를 구현하고 있기 때문에 walk_and_quack() 이라는 함수의 인자로 적합하다. 그러나 Dog는 두 메서드 모두 구현되어 있지 않으므로 해당 함수의 인자로서 부적합하다. 즉 적절한 duck typing에 실패한 것
+
+
+
+Python에서는 다양한 곳에서 duck typing을 활용한다. `__len()__` 을 구현하여 길이가 있는 무언가를 표현한다던지, 또는 `__iter__()` 와 `__getitem()__` 을 구현하여 iterable을 duck-typing한다. 굳이 Iterable(가명) 이라는 interface를 상속받지 않고 `__iter__()__`와 `__getitem__()`을 구현하기만 하면 for ... in 에서 바로 사용할 수 있다.
+
+이와 같은 방식은 일반적으로 interface를 구현하거나 클래스를 상속하는 방식으로 인자나 변수의 적합성을 runtime 이전에 판단하는 정적 타입 언어들과 비교된다. 자바나 스칼라에서는 interface, c++는 template을 활용하여 타입의 적합성을 보장한다.
