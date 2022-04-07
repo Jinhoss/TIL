@@ -148,3 +148,67 @@ __Resizing__
 ## 힙(heap)
 
 - 부모 자식 간의 대소 관계는 정의되어 있으나 형제 간의 대소 관계는 정의되지 않은 완전 이진 트리
+
+
+
+# Red-Black Tree
+
+- Balanced Search Tree이다.
+  - N개의 elements에 대해 O(logN)의 탐색 시간을 보장하는 트리
+  - Self-Balancing을 통해 tree의 height를 조정
+
+
+
+## 왜 쓰는가?
+
+- 편향 이진트리를 생각해보면 탐색시간이 O(N)이 된다.
+
+![redblack2](README.assets/redblack2.png)
+
+- hash table의 separate chaining, java hash map api
+
+
+
+## Red-Black Tree의 property
+
+1. Node는 Red 또는 Black 속성을 가진다.
+2. Root와 Leaf Node(NIL)는 Black이다.
+3. 현재 Node가 Red라면, 자식 Node들은 Black이다.
+4. 특정 Node로부터 NIL자손까지의 모든 경로는 같은 숫자의 Black Node를 포함해야 한다.(NIL은 제외)
+
+![redblack1](README.assets/redblack1.PNG)
+
+## 추가정보
+
+- Node는 Color를 저장하기 위한 추가 Bit를 가진다.
+- Longest Path(root로부터 가장 먼 NIL까지의 거리)는 shortest path의 2배를 넘지 않는다.
+
+
+
+## 예시
+
+![redblack3](README.assets/redblack3.PNG)
+
+![redblack4](README.assets/redblack4-16493349509811.PNG)
+
+![redblack5](README.assets/redblack5.PNG)
+
+![redblack6](README.assets/redblack6.PNG)
+
+![redblack7](README.assets/redblack7.PNG)
+
+- Double Red 발생시 Uncle이 Black이면 Restructing
+  - 오름차순으로 정렬
+  - 가운데 값을 부모로, 나머지 두 값을 자식
+  - 자기 자신의 위치를 찾는 시간 O(logN) + restructiing O(1) => O(logN)
+- Uncle이 Red이면 Recoloring
+  - 부모와 형제를 Black, 부모의 부모를 Red로 바꿈
+  - 부모의 부모가 root가 아니면 recoloring이 또 발생할 수 있음
+  - 자기 자신의 위치를 찾는 시간 O(log N) + 컬러링 O(1) ~ O(log N) => O(log N)
+
+
+
+## 정리
+
+- Search, Insert, Delete 모두 O(logN)
+- Red-Black tree는 이진 탐색 트리 중 가장 성능이 좋다고 알려져 있음
